@@ -1,0 +1,665 @@
+\documentclass{beamer}
+
+\usepackage{pgfpages}
+
+\pgfpagesdeclarelayout {resize too} {
+  \def\pgfpageoptionborder{0pt}
+} {
+  \pgfpagesphysicalpageoptions {%
+    logical pages=1,%
+    physical height=\pgfpageoptionheight,%
+    physical width=\pgfpageoptionwidth%
+  }
+  \pgfpageslogicalpageoptions{1} {%
+    resized width=\pgfphysicalwidth,%
+    resized height=\pgfphysicalheight,%
+    border shrink=\pgfpageoptionborder,%
+    center=\pgfpoint{.5\pgfphysicalwidth}{.75\pgfphysicalheight}%
+  }%
+}
+
+\newcommand{\bgcol}{white}
+\setbeamercolor{background canvas}{bg=\bgcol}
+
+\usepackage{tikz}
+\usetikzlibrary{arrows,decorations.pathmorphing,backgrounds,positioning,fit,petri}
+\usetikzlibrary{fadings}
+
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+
+\pgfkeys{/pgf/number format/min exponent for 1000 sep={4}}
+\pgfkeys{/pgf/number format/1000 sep={\,}}
+
+\definecolor{color0}{rgb}{0.267004,0.004874,0.329415}
+\definecolor{color1}{rgb}{0.253935,0.265254,0.529983}
+\definecolor{color2}{rgb}{0.163625,0.471133,0.558148}
+\definecolor{color3}{rgb}{0.134692,0.658636,0.517649}
+\definecolor{color4}{rgb}{0.477504,0.821444,0.318195}
+\definecolor{color5}{rgb}{0.001462,0.000466,0.013866}
+\definecolor{color6}{rgb}{0.232077,0.059889,0.437695}
+\definecolor{color7}{rgb}{0.550287,0.161158,0.505719}
+\definecolor{color8}{rgb}{0.868793,0.287728,0.409303}
+\definecolor{color9}{rgb}{0.994738,0.624350,0.427397}
+
+\newcommand{\plotwidth}{242pt}
+\newcommand{\plotheight}{198pt}
+\newcommand{\plotshift}{7pt}
+
+\pgfplotsset{
+  every axis y label/.style={
+    at={(ticklabel cs:0.5)},
+    anchor=near ticklabel,
+  }
+}
+
+\pgfplotsset{
+  extra tick style={
+    tick pos=lower,
+    tick align=outside,
+    major tick length=2pt,
+    tick style={
+      thick,
+      blue,
+    },
+    tick label style={
+      color=blue,
+      fill=\bgcol,
+      fill opacity={0.93},
+      font=\footnotesize,
+      inner sep=2pt,
+    },
+  }
+}
+
+\usepackage{bbm}
+
+\newcommand{\one}{j}
+\newcommand{\two}{k}
+
+\newcommand{\ass}[2]{A^{e}_{#1}(#2)}
+\newcommand{\vass}[1]{\boldsymbol{A}^{e}(#1)}
+\newcommand{\lia}[1]{\ell_{#1}}
+\newcommand{\val}[2]{V_{#1}(#2)}
+%\newcommand{\equ}[2]{\tilde{E\;}\!\!_{#1}(#2)}
+\newcommand{\equ}[2]{E_{#1}(#2)}
+
+\newcommand{\expeczerorecov}[1]{\mathbb{E}^{\mathbb{Q}}[\mathbbm{1}_{\tau_{#1}>1} | \vass{0}]}
+\newcommand{\expecwithrecov}[1]{\mathbb{E}^{\mathbb{Q}}[\mathbb{V}_{#1}(E_{#1}) | \vass{0}]}
+
+\newcommand{\va}{\boldsymbol{a}^{e}}
+\newcommand{\vv}{\boldsymbol{v}}
+\newcommand{\vu}{\boldsymbol{u}}
+\newcommand{\vE}{\boldsymbol{E}}
+
+\newcommand{\sA}{\textup{A}}
+\newcommand{\sB}{\textup{B}}
+
+% This file is a solution template for:
+
+% - Talk at a conference/colloquium.
+% - Talk length is about 20min.
+% - Style is ornate.
+
+\usepackage{my-split-theme}
+
+\mode<presentation>
+{
+  \usetheme{default}
+  \usecolortheme{crane}
+  
+  % or ...
+
+  % \usefonttheme[onlymath]{serif}
+
+  \setbeamercovered{transparent}
+  % or whatever (possibly just delete it)
+
+%  \input{my-footline.tex}
+}
+
+
+\usepackage[english]{babel}
+% or whatever
+
+\usepackage[latin1]{inputenc}
+% or whatever
+
+\usepackage{times}
+\usepackage[T1]{fontenc}
+% Or whatever. Note that the encoding and the font should match. If T1
+% does not look nice, try deleting the line with the fontenc.
+
+
+\title[Pricing Interbank Debt]
+% (optional, use only with long paper titles)
+{`Financial Contagion'}
+
+\subtitle {Application of a Structural Model of Credit Risk\\
+  to the Network of Interbank Loans}
+
+\author {A Tucker} % \\ \texttt{ali@sysrisk.uk}}
+% - Give the names in the same order as the appear in the paper.
+% - Use the \inst{?} command only if the authors have different
+%   affiliation.
+
+\institute%[SYSRISK] % (optional, but mostly needed)
+{SYSRISK}
+% - Use the \inst command only if there are several affiliations.
+% - Keep it simple, no one is interested in your street address.
+
+\date
+% (optional, should be abbreviation of conference name)
+{Conference on Systemic Risk and Financial Stability}
+% - Either use conference name or its abbreviation.
+% - Not really informative to the audience, more for people (including
+%   yourself) who are reading the slides online
+
+\subject{Quantitative Finance}
+% This is only inserted into the PDF information catalog. Can be left
+% out. 
+
+
+% Delete this, if you do not want the table of contents to pop up at
+% the beginning of each subsection:
+
+% \AtBeginSection[]
+% {
+%   \begin{frame}<beamer>{Outline}
+%     \tableofcontents[currentsection,currentsubsection]
+%   \end{frame}
+% }
+
+
+% If you wish to uncover everything in a step-wise fashion, uncomment
+% the following command: 
+
+%\beamerdefaultoverlayspecification{<+->}
+
+
+\begin{document}
+
+\begin{frame}[plain, label=titlepage]
+  \titlepage
+\end{frame}
+
+% Structuring a talk is a difficult task and the following structure
+% may not be suitable. Here are some rules that apply for this
+% solution: 
+
+% - Exactly two or three sections (other than the summary).
+% - At *most* three subsections per section.
+% - Talk about 30s to 2min per frame. So there should be between about
+%   15 and 30 frames, all told.
+
+% - A conference audience is likely to know very little of what you
+%   are going to talk about. So *simplify*!
+% - In a 20min talk, getting the main ideas across is hard
+%   enough. Leave out details, even if it means being less precise than
+%   you think necessary.
+% - If you omit details that are vital to the proof/implementation,
+%   just say so once. Everybody will be happy with that.
+
+\begin{frame}[label=baselquote]
+  \frametitle{The importance of pricing counterparty risk}
+  \begin{quotation}
+    Under Basel II, the risk of counterparty default and credit migration risk were addressed but mark-to-market losses due to credit valuation adjustments (CVA) were not. During the financial crisis, however, roughly two thirds of losses attributed to counterparty credit risk were due to CVA losses and only about one third were due to actual defaults.
+  \end{quotation}
+  \begin{flushright}
+    Basel Committee on Banking Supervision, 2011
+ %   https://www.bis.org/press/p110601.htm.
+  \end{flushright}
+\end{frame}
+
+\begin{frame}[label=boequote]
+  \frametitle{The problem of pricing risk in a network}
+  \begin{quotation}
+    The Bank's \alert{solvency contagion model} examines how deteriorating
+    capital positions lead to revaluation of interbank debt claims,
+    which in turn can affect banks' capital positions further \dots
+    Bank staff's judgement is that \dots the overall impact on the system
+    via this channel remains immaterial \dots
+    See Bank of England, Staff Working Paper No. 662,
+    `The decline of solvency contagion risk', June 2017.
+  \end{quotation}
+  \begin{flushright}
+    Bank of England stress testing results, 2017
+  \end{flushright}
+\end{frame}
+
+\begin{frame}[label=outline]
+  \frametitle{Outline}
+  \tableofcontents
+  % You might wish to add the option [pausesections]
+\end{frame}
+
+\section{Illustrative plots}
+\subsection{Two banks and zero recovery rate}
+
+\tikzstyle{every pin}=[
+  node font=\footnotesize,
+  inner sep=2pt,
+]
+
+\begin{frame}[label=counterpartyfailure]
+  \frametitle<1>{Evolution of the real economy}
+  \frametitle<2->{Pricing in the risk of failure}
+  \hspace{\plotshift}
+  \begin{tikzpicture}
+    \begin{axis}[
+        title={
+          \begin{overprint}[226pt]
+            \onslide<2>
+            Bank $\one$ debt valuation $\val{\one}{0}=\expeczerorecov{\one}$
+            \onslide<3>
+            Bank $\two$ debt valuation $\val{\two}{0}=\expeczerorecov{\two}$
+          \end{overprint}
+        },
+        xlabel={$\ass{\one}{\only<1>{t}\only<2->{0}}$},
+        ylabel={
+          \begin{overprint}[24pt]
+            \onslide<1>
+            $\ass{\two}{t}$
+            \onslide<2->
+            $\ass{\two}{0}$
+          \end{overprint}
+        },
+        xmin=1010, xmax=1120,
+        ymin=740, ymax=810,
+        ticklabel style={font=\small,},
+        extra x ticks={1063.6},
+        extra x tick labels={$\lia{\one}$},
+        extra y ticks={774.8},
+        extra y tick labels={$\lia{\two}$},
+        width=\plotwidth,
+        height=\plotheight,
+      ]
+      \only<1> {
+        \draw [gray, thin] (axis cs:1063.6,810) --(axis cs:1063.6,740);
+        \node  at (1093.1, 804.8) [
+          fill, circle, inner sep=0pt,
+          minimum size=3pt,
+          pin=below right:{$\vass{0}$},
+        ] {};
+        \addplot [
+          blue,
+        ] file {sample-path-01.dat};
+      }
+      \only<2> {
+        \begin{scope}[node font=\tiny, inner ysep=-2pt]
+          \input{mc30000/varb/uj_1.tex}
+        \end{scope}
+      }
+      \only<3> {
+        \begin{scope}[node font=\tiny, inner ysep=-2pt]
+          \input{mc30000/varb/uk_1.tex}
+        \end{scope}
+      }
+    \end{axis}
+  \end{tikzpicture}
+\end{frame}
+
+\tikzset{
+  pics/balancesheet/.style 2 args={
+    code={
+      \node    at (0, 4.7) {Bank $#1$};
+      \node<2> at (0, 1.4) [minimum width=2.0cm, fill=green!20,
+        anchor=south west, minimum height=0.8cm] {$L_{#1#2}$};
+      \node    at (0, 3.7) [minimum width=2.0cm, draw,
+        anchor=south east,] {Assets};
+      \node    at (0, 3.7) [minimum width=2.0cm, draw,
+        anchor=south west,] {Liabilities};
+      \node    at (0, 0.7) [minimum width=2.0cm, draw,
+        anchor=south east, minimum height=3.0cm,] {$\ass{#1}{t}$};
+      \node    at (0, 1.4) [minimum width=2.0cm, draw,
+        anchor=south west, minimum height=2.3cm,] {$\lia{#1}$};
+      \node<1> at (0, 0.7) [minimum width=2.0cm, draw,
+        anchor=south west, minimum height=0.7cm,] {$\equ{#1}{t}$};
+      \node<2> at (0, 0.0) [minimum width=2.0cm, draw, fill=green!20,
+        anchor=south east, minimum height=0.7cm] {$\val{#2}{t} L_{#2#1}$};
+      \node<2> at (0, 0.0) [minimum width=2.0cm, draw,
+        anchor=south west, minimum height=1.4cm] {$\equ{#1}{t}$};
+    }
+  }
+}
+
+\begin{frame}[t, label=balancesheets]
+  \frametitle<1>{Balance sheets in the unconnected case}
+  \frametitle<2>{Balance sheets with interbank exposures}
+  \centering
+  \begin{tikzpicture}
+    \node at (0, 7.8) {};
+    \pic at (-3, 2) {balancesheet={\one}{\two}};
+    \pic at ( 3, 2) {balancesheet={\two}{\one}};
+  \end{tikzpicture}
+\end{frame}
+
+\begin{frame}[label=interbankexposures]
+  \frametitle{Pricing in the effect of interbank exposures}
+  \hspace{\plotshift}
+  \begin{tikzpicture}
+    \begin{axis}[
+        title={
+          \begin{overprint}[134pt]
+            \onslide<1>
+            Bank $\one$ debt valuation $\val{\one}{0}$
+            \onslide<2>
+            Bank $\two$ debt valuation $\val{\two}{0}$
+          \end{overprint}
+        },
+        xlabel={$\ass{\one}{0}$},
+        ylabel={$\ass{\two}{0}$},
+        xmin=1010, xmax=1120,
+        ymin=740, ymax=810,
+        ticklabel style={font=\small,},
+        extra x ticks={1063.6},
+        extra x tick labels={$\lia{\one}$},
+        extra y ticks={774.8},
+        extra y tick labels={$\lia{\two}$},
+        width=\plotwidth,
+        height=\plotheight,
+      ]
+      \only<1> {
+        \begin{scope}[semitransparent]
+          \input{mc30000/varb/uj_1_nolabel.tex}
+        \end{scope}
+        \begin{scope}[node font=\tiny, inner ysep=-2pt]
+          \input{mc30000/varb/uj_2.tex}
+        \end{scope}
+        \begin{scope}[thin, gray]
+          \input{mc30000/varb/bk_2.tex}
+        \end{scope}
+      }
+      \only<2> {
+        \begin{scope}[semitransparent]
+          \input{mc30000/varb/uk_1_nolabel.tex}
+        \end{scope}
+        \begin{scope}[node font=\tiny, inner ysep=-2pt]
+          \input{mc30000/varb/uk_2.tex}
+        \end{scope}
+        \begin{scope}[thin, gray]
+          \input{mc30000/varb/bj_2.tex}
+        \end{scope}
+      }
+    \end{axis}
+  \end{tikzpicture}
+\end{frame}
+
+\subsection{The Bank of England model}
+
+\begin{frame}[label=comparison]
+  \frametitle{Comparison with the Bank of England model}
+  \hspace{\plotshift}
+  \begin{tikzpicture}
+    \begin{axis}[
+        title={
+          \begin{overprint}[134pt]
+            \onslide<1>
+            Bank $\one$ debt valuation $\val{\one}{0}$
+            \onslide<2>
+            Bank $\two$ debt valuation $\val{\two}{0}$
+          \end{overprint}
+        },
+        xlabel={$\ass{\one}{0}$},
+        ylabel={$\ass{\two}{0}$},
+        xmin=1010, xmax=1120,
+        ymin=740, ymax=810,
+        ticklabel style={font=\small,},
+        extra x ticks={1063.6},
+        extra x tick labels={$\lia{\one}$},
+        extra y ticks={774.8},
+        extra y tick labels={$\lia{\two}$},
+        width=\plotwidth,
+        height=\plotheight,
+      ]
+      \only<1> {
+        \begin{scope}[nearly transparent]
+          \input{mc30000/varb/uj_1_nolabel.tex}
+        \end{scope}
+        \begin{scope}[semitransparent]
+          \input{mc30000/varb/uj_2_nolabel.tex}
+        \end{scope}
+        \begin{scope}[semitransparent, thin, gray]
+          \input{mc30000/varb/bk_2.tex}
+        \end{scope}
+        \input{BoE_uj_2.tex}
+      }
+      \only<2> {
+        \begin{scope}[nearly transparent]
+          \input{mc30000/varb/uk_1_nolabel.tex}
+        \end{scope}
+        \begin{scope}[semitransparent]
+          \input{mc30000/varb/uk_2_nolabel.tex}
+        \end{scope}
+        \begin{scope}[semitransparent, thin, gray]
+          \input{mc30000/varb/bj_2.tex}
+        \end{scope}
+        \input{BoE_uk_2.tex}
+      }
+    \end{axis}
+  \end{tikzpicture}
+\end{frame}
+
+\section{Development}
+\subsection{Alternative maturity profile}
+
+\definecolor{lightblue}{rgb}{0.7,0.7,1.0}
+
+\begin{frame}[label=maturityprofiles]
+  \frametitle{Alternative maturity profile}
+  \begin{tikzpicture}
+    \path [draw=blue, fill=lightblue, path fading=north]
+    (2.039, 5.36) rectangle (2.223, 6.20);
+    \begin{axis}[
+        title={Earlier (BoE) assumption},
+        axis lines=left,
+        ybar interval,
+        ymin=0, ymax=0.2,
+        ytick distance=0.1,
+        ticklabel style={font=\small,},
+        xlabel={Months to maturity},
+        ylabel={Fraction of debt issue},
+        ylabel style={rotate=90,},
+        xticklabel interval boundaries,
+        xticklabel=\pgfmathprintnumber\nexttick,
+        x tick label style={
+          font=\tiny,
+          rotate=90,
+          anchor=east,
+        },
+        width=161pt,
+        height=\plotheight,
+      ]
+      \addplot file {maturity-BoE.dat};
+    \end{axis}
+  \end{tikzpicture}
+%  \hspace{12pt}
+  \begin{tikzpicture}
+    \begin{axis}[
+        title={Revised assumption},
+        axis lines=left,
+        ybar interval,
+        ymin=0, ymax=0.2,
+        ytick distance=0.1,
+        ticklabel style={font=\small,},
+        xlabel={Months to maturity},
+        xticklabel interval boundaries,
+        xticklabel=\pgfmathprintnumber\nexttick,
+        x tick label style={
+          font=\tiny,
+          rotate=90,
+          anchor=east,
+        },
+        width=161pt,
+        height=\plotheight,
+      ]
+      \addplot file {maturity-variant-c.dat};
+    \end{axis}
+  \end{tikzpicture}
+\end{frame}
+
+\begin{frame}[label=revisedprofile]
+  \frametitle{Pricing with revised maturity profile}
+  \hspace{\plotshift}
+  \begin{tikzpicture}
+    \begin{axis}[
+        title={
+          \begin{overprint}[132pt]
+            \onslide<1>
+            Bank $\one$ debt valuation $\val{\one}{t}$
+            \onslide<2>
+            Bank $\two$ debt valuation $\val{\two}{t}$
+          \end{overprint}
+        },
+        xlabel={$\ass{\one}{t}$},
+        ylabel={$\ass{\two}{t}$},
+        xmin=1010, xmax=1120,
+        ymin=740, ymax=810,
+        ticklabel style={font=\small,},
+        extra x ticks={1063.6},
+        extra x tick labels={$\lia{\one}$},
+        extra y ticks={774.8},
+        extra y tick labels={$\lia{\two}$},
+        width=\plotwidth,
+        height=\plotheight,
+      ]
+      \only<1> {
+        \begin{scope}[semitransparent]
+          \input{mc30000/rr00/uj_1.tex}
+        \end{scope}
+        \begin{scope}[node font=\tiny, inner ysep=-2pt]
+          \input{mc30000/rr00/uj_2.tex}
+        \end{scope}
+        \begin{scope}[thin, gray]
+          \input{mc30000/rr00/bk_2.tex}
+        \end{scope}
+      }
+      \only<2> {
+        \begin{scope}[semitransparent]
+          \input{mc30000/rr00/uk_1.tex}
+        \end{scope}
+        \begin{scope}[node font=\tiny, inner ysep=-2pt]
+          \input{mc30000/rr00/uk_2.tex}
+        \end{scope}
+        \begin{scope}[thin, gray]
+          \input{mc30000/rr00/bj_2.tex}
+        \end{scope}
+      }
+    \end{axis}
+  \end{tikzpicture}
+\end{frame}
+
+\subsection{General solution structure for multiple banks}
+
+\begin{frame}[label=dependencystructure]
+  \frametitle{Solution dependency structure in general}
+  \begin{figure}
+    \begin{tikzpicture}
+      [%node distance=1.8cm, % on grid,
+        t/.style={}, % {rectangle, draw=blue!50, fill=blue!20, thick},
+        p/.style={->, shorten >=1pt, >=stealth, semithick}]
+      \node [t] at (0, 1.3) (jk) {$\vv_{\{j,k\}}$};
+      \node [t] at (-1.25, 0) (j) {$\vv_{\{j\}}$}
+      edge [p] (jk);
+      \node [t] at (1.25, 0) (k) {$\vv_{\{k\}}$}
+      edge [p] (jk);
+      \node [t] at (0, -1.3)  {$\vv_{\emptyset}$}
+      edge [p] (j) edge [p] (k);
+      %
+      \node [t] at (5.7, 2.43) (ijk) {$\vv_{\{i,j,k\}}$};
+      \node [t] (ik) [below=of ijk] {$\vv_{\{i,k\}}$}
+      edge [p] (ijk);
+      \node [t] (ij) [left=of ik] {$\vv_{\{i,j\}}$}
+      edge [p] (ijk);
+      \node [t] (jk) [right=of ik] {$\vv_{\{j,k\}}$}
+      edge [p] (ijk);
+      \node [t] (i) [below=of ij] {$\vv_{\{i\}}$}
+      edge [p] (ij) edge [p] (ik);
+      \node [t] (j) [below=of ik] {$\vv_{\{j\}}$}
+      edge [p] (ij) edge [p] (jk);
+      \node [t] (k) [below=of jk] {$\vv_{\{k\}}$}
+      edge [p] (ik) edge [p] (jk);
+      \node [t] [below=of j] {$\vv_{\emptyset}$}
+      edge [p] (i) edge [p] (j) edge [p] (k);
+    \end{tikzpicture}
+    \caption{Progression of the algorithm for a system of two banks and
+      for a system of three.}
+  \end{figure}
+\end{frame}
+
+\begin{frame}[label=supportingtheory]
+  \frametitle{Some supporting theory}
+  \begin{theorem}
+    For survival sets $\sA$ and $\sB$,
+    \begin{equation*}
+      \sB\subseteq \sA\implies \vv_{\sB}\leq \vv_{\sA}.
+    \end{equation*}
+  \end{theorem}
+  \begin{corollary}
+    With $\vE^{*}(\va,\vu)$ the \alert{equity valuation function}
+    indicating solvency,
+    \begin{multline*}
+      \text{if}\quad\exists\, \sB\subseteq \sA\quad\text{such that}\quad \forall i \in \sA \quad
+      0<E^{*}_{i}(\va,\vv_{\sB}(\va))\\
+      \text{then}\quad
+      \forall i \in \sA\quad 0<E^{*}_{i}(\va,\vv_{\sA}(\va)).
+    \end{multline*}
+  \end{corollary}
+\end{frame}
+
+\subsection{Nonzero recovery rate}
+
+\begin{frame}[label=recoveryrate]
+  \frametitle{Pricing with recovery rate $\beta=0.4$}
+  \hspace{\plotshift}
+  \begin{tikzpicture}
+    \begin{axis}[
+        title={
+          \begin{overprint}[132pt]
+            \onslide<1>
+            Bank $\one$ debt valuation
+            $\val{\one}{t}$
+            \onslide<2>
+            Bank $\two$ debt valuation
+            $\val{\two}{t}$
+          \end{overprint}
+        },
+        xlabel={$\ass{\one}{t}$},
+        ylabel={$\ass{\two}{t}$},
+        xmin=1010, xmax=1120,
+        ymin=720, ymax=810,
+        ticklabel style={font=\small,},
+        extra x ticks={1063.6},
+        extra x tick labels={$\lia{\one}$},
+        extra y ticks={774.8},
+        extra y tick labels={$\lia{\two}$},
+        width=\plotwidth,
+        height=\plotheight,
+      ]
+      \only<1> {
+        \begin{scope}[semitransparent]
+          \input{mc30000/rr04/uj_1.tex}
+        \end{scope}
+        \begin{scope}[node font=\tiny, inner ysep=-2pt]
+          \input{mc30000/rr04/uj_2.tex}
+        \end{scope}
+        \begin{scope}[thin, gray]
+          \input{mc30000/rr04/bk_2.tex}
+        \end{scope}
+      }
+      \only<2> {
+        \begin{scope}[semitransparent]
+          \input{mc30000/rr04/uk_1.tex}
+        \end{scope}
+        \begin{scope}[node font=\tiny, inner ysep=-2pt]
+          \input{mc30000/rr04/uk_2.tex}
+        \end{scope}
+        \begin{scope}[thin, gray]
+          \input{mc30000/rr04/bj_2.tex}
+        \end{scope}
+      }
+    \end{axis}
+  \end{tikzpicture}
+\end{frame}
+
+\end{document}

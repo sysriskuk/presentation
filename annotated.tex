@@ -1,0 +1,326 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage{beamerarticle, pgf, float}
+
+%\usepackage{tikz}
+%\usetikzlibrary{fadings}
+
+\setjobnamebeamerversion{slides}
+
+\newcommand{\ass}[2]{A^{e}_{#1}(#2)}
+\newcommand{\vass}[1]{\boldsymbol{A}^{e}(#1)}
+\newcommand{\lia}[1]{\ell_{#1}}
+\newcommand{\val}[2]{V_{#1}(#2)}
+\newcommand{\equ}[2]{E_{#1}(#2)}
+
+\newcommand{\vv}{\boldsymbol{v}}
+
+\newcommand{\sA}{\textup{A}}
+\newcommand{\sB}{\textup{B}}
+
+\begin{document}
+  \begin{figure}[H]
+    \begin{center}
+      \includeslide[width=\textwidth]{titlepage}
+    \end{center}
+    \ttfamily
+    Welcome to my talk about financial contagion.
+
+    In fact I am suspicious of this terminology,
+    which is why I have put those words in inverted commas.
+    I am going to propose a model that owes more to pricing theory than to epidemiology.
+  \end{figure}
+  \begin{figure}[H]
+    \begin{center}
+      \includeslide[width=\textwidth]{baselquote}
+    \end{center}
+    \ttfamily
+    The first of my two motivating quotes is from the Bank for International Settlements.
+    The key point here is the estimate that roughly two thirds of losses attributed to conterparty credit risk
+    during the financial crisis were due to fear of default rather than to actual default.
+
+    The technology to account for the danger of default in a single counterparty is not new.
+    The so-called structural model of credit risk dates back to the 1970s and is associated with
+    names such as Merton, Black and Cox.
+  \end{figure}
+  \begin{figure}[H]
+    \begin{center}
+      \includeslide[width=\textwidth]{boequote}
+    \end{center}
+    \ttfamily
+    My second quote is from the Bank of England. It recognises the need to account for this effect and it has a model
+    (updated in 2019's `Forward-looking solvency contagion').
+
+    As regulator, it must concern itself with system-wide risks and it has adopted the language of contagion.
+    One thing affects another which affects another. It sounds like a fixed point argument and it is.
+    This is the approach traditionally associated with network pricing, with papers by Eisenberg and Noe in 2001 and Rogers and Veraart in 2013.
+    But they were modelling the impact of actual default.
+    The Bank of England is applying the same logic, but to banks whose credit rating is merely impaired.
+
+    The conclusion of the Bank of England is that there is nothing to worry about.
+    I don't have its data so I can't take a view on that.
+    I am also not going to criticise its assumptions. They may not be true but they are useful. I adopt them myself.
+    But I see some issues with the model it derives from those assumptions.
+  \end{figure}
+  \begin{figure}[H]
+    \begin{center}
+      \includeslide[width=\textwidth]{outline}
+    \end{center}
+    \ttfamily
+    My aim today is to share my intuition for the way I think this should be handled.
+    So to start off with at least, I confine myself to a very simple case, that of two banks and zero recovery rate.
+    Two banks because two dimensions is as many as I can comfortably fit on a slide.
+    Zero recovery rate meaning that when a bank defaults, its creditors get nothing.
+    That as well is to make the plots easier.
+    Neither of these assumptions is required by the model itself as we will see nearer the end.
+  \end{figure}
+  \begin{figure}[H]
+    \begin{center}
+      \includeslide[width=\textwidth]{counterpartyfailure<1>}
+    \end{center}
+    \ttfamily
+    The real economy I assume to evolve independently of the financial sector.
+    It communicates with the financial sector through the vector $\vass{t}$.
+    Component $\ass{j}{t}$ is the external assets value of bank $j$ and component $\ass{k}{t}$ is the external assets value of bank $k$.
+    So $j$ might be Barclays and $k$ might be HSBC. These figures are in billions of pounds.
+
+    This blue squiggle is a sample path, or simulation, over a year. I assume a correlated Geometric Brownian Motion.
+    It is perhaps a big assumption but it is the assumption that the Bank of England also makes.
+    Or weaker even, since the Bank of England dispenses with correlation.
+
+    I have written $\lia{j}$ for the total liabilities of bank $j$
+    (in BoE notation it is $L^{e}_{j}+\sum_{j}L_{jk}$).
+    So if at any point $\ass{j}{t}$ were to fall below $\lia{j}$ then bank $j$ would fail.
+    Graphically it would be if the path were to cross the thin grey line.
+    This particular path didn't, but if I were to generate, say, thirty thousand such paths then some fraction of them would do so within the year.
+    That fraction we call the probability of default at $\vass{0}$.
+  \end{figure}
+  \begin{figure}[H]
+    \begin{center}
+      \includeslide[width=\textwidth]{counterpartyfailure<2>}
+    \end{center}
+    \ttfamily
+    I have done exactly that, and calculated probability of default from many different starting points.
+    This contour plot shows survival probability, that is, one minus probability of default.
+    It is the fair value per unit face value of bank $j$'s debt with one year to maturity,
+    assuming an interest rate of zero.
+
+    Note that the valuation $\val{j}{0}$ falls smoothly to zero at the failure boundary,
+    where probability of default is one. Naturally these contour lines are absolutely vertical,
+    since we have not yet introduced dependence on $\ass{k}{t}$.
+  \end{figure}
+  \begin{figure}[H]
+    \begin{center}
+      \includeslide[width=\textwidth]{counterpartyfailure<3>}
+    \end{center}
+    \ttfamily
+    Here I do the same for bank $k$ with the exact same axes and same scale.
+    Of course $\lia{k}$ stands for the total liabilities of bank $k$.
+    Bank $k$ is assumed to fail, with its debt worthless, if $\ass{k}{t}$ falls below $\lia{k}$
+    at any point during the year.
+
+    I have described a Monte Carlo pricing algorithm that technically is justified by the hedging argument
+    and no-arbitrage principles introduced by Merton, Black and Scholes in the 1970s.
+    However they tended to use the language of partial differential equations,
+    and confined themselves to one dimension for the underlying.
+    But the same argument extends perfectly well to two dimensions or more.
+  \end{figure}
+  \begin{figure}[H]
+    \begin{center}
+      \includeslide[width=\textwidth]{balancesheets<1>}
+    \end{center}
+    \ttfamily
+    The situation viewed through balance sheets.
+    $\equ{j}{t}$ is the difference between $\ass{j}{t}$ and $\lia{j}$.
+    If it is positive we call it equity.
+    If it is not then bank $j$ has failed and is out of the game.
+    This is an important point.
+    In my first attempt at this I made a mistake.
+    I inadvertently assumed that a bank would come back to life if its assets recovered.
+    Not only was it a bad assumption but it made the maths harder.
+  \end{figure}
+  \begin{figure}[H]
+    \begin{center}
+      \includeslide[width=\textwidth]{balancesheets<2>}
+    \end{center}
+    \ttfamily
+    It is time to introduce interbank exposures.
+    These entries in green could represent many kinds of exposure, but it is most straightforward simply to imagine debt.
+    Bank $j$ owes the amount $L_{jk}$ to bank $k$, payable after a year.
+    The liability will not change for the period, whatever happens to asset prices, whatever happens to $k$.
+    So I can just absorb it into $\lia{j}$ representing fixed total liabilities.
+
+    On the other hand where it reappears on the asset side of bank $k$'s balance sheet,
+    it is mediated by $\val{j}{t}$, a function of time and (external assets) space, and is counted as an additional asset.
+    (For ease of comparison I have adopted BoE notation wherever possible
+    but its stochastic flavour may obscure some functional dependencies.)
+
+    Likewise for $L_{kj}$ the amount owed by bank $k$ to bank $j$.
+    Because they now have these additional assets, the external assets of each bank can fall further before it fails.
+  \end{figure}
+  \begin{figure}[H]
+    \begin{center}
+      \includeslide[width=\textwidth]{interbankexposures<1>}
+    \end{center}
+    \ttfamily
+    In this plot we can see that the failure boundary for bank $j$ has shifted to the left, at least in the region where bank $k$ survives.
+    The contour lines all move in sympathy.
+    If bank $k$ does fail, if $\ass{k}{t}$ falls below the thin grey line (even if it subsequently recovers), then we are back to our original problem.
+    The vertical lines are unchanged from the earlier slides.
+    So here we have two functions plotted on the same axes, one for both banks surviving and one for just bank $j$ surviving.
+
+    This suggests the need explicitly to track the set of surviving banks.
+    It is a third argument to our debt valuation function, after time and external assets value.
+  \end{figure}
+  \begin{figure}[H]
+    \begin{center}
+      \includeslide[width=\textwidth]{interbankexposures<2>}
+    \end{center}
+    \ttfamily
+    The analogous plot for bank $k$. So long as asset prices stay to the right of the thin grey line,
+    that is, so long as bank $j$ remains solvent,
+    the failure boundary for bank $k$ is the lower one.
+    But if the asset path crosses that line and bank $j$ fails, then bank $k$'s failure boundary reverts to the upper one, as in the earlier slide.
+    Note that the two solutions are continuous with one another where they meet at the grey line.
+    This is a natural consequence of our algorithm. It is a property of random walks that,
+    as one approaches a boundary, the probability of crossing it rises to one.
+    So there can be no sudden jumps in expectation.
+  \end{figure}
+  \begin{figure}[H]
+    \begin{center}
+      \includeslide[width=\textwidth]{comparison<1>}
+    \end{center}
+    \ttfamily
+    Although the Bank of England's data are not public, its algorithm is.
+    It has been coded up in Python and uploaded to GitHub.
+    This plot shows the result when it is run against the estimated figures that we have been using.
+    My own solution is reproduced in fainter lines for comparison.
+
+    There is a large region where the Bank of England model says everything is fine, but where my model indicates failure for both banks.
+    At the edge of that region, the Bank of England's model's results display a very sudden discontinuity,
+    where the debt of both banks goes from close to 100\% of face value to worthless in no distance at all.
+  \end{figure}
+  \begin{figure}[H]
+    \begin{center}
+      \includeslide[width=\textwidth]{comparison<2>}
+    \end{center}
+    \ttfamily
+    The discontinuity appears in the same place when pricing bank $k$'s debt.
+    These discontinuities appear because the Bank of England is not, like us, solving the two-dimensional problem directly.
+    Instead it applies a fixed point procedure to force together two copies of the solution to the one-dimensional problem,
+    which has an analytic expression.
+    For some sets of input, like this one, the procedure will have multiple solutions.
+    The program simply selects the most optimistic one.
+    So what we see here is something akin to hysteresis.
+
+    There is no danger of multiple solutions in the approach I am describing today.
+    
+    Our solutions do match at either extreme because I have kept as close as possible to the assumptions of the Bank of England.
+  \end{figure}
+  \definecolor{lightblue}{rgb}{0.7,0.7,1.0}
+  \begin{figure}[H]
+    \begin{center}
+      %\begin{tikzpicture}
+        %\path [draw=blue, fill=lightblue, path fading=north]
+        %(0.039, 0.36) rectangle (0.223, 1.20);
+        \includeslide[width=\textwidth]{maturityprofiles}
+      %\end{tikzpicture}
+    \end{center}
+    \ttfamily
+    In particular I have kept to the assumption that all interbank debt has exactly twelve months to maturity,
+    and that it somehow stays out at twelve months to maturity.
+    I am replacing this now with my own arbitrary assumption,
+    that when binned according to time to maturity, the amount of debt falls off smoothly.
+
+    Both assumptions have the same average maturity of one year.
+    My assumption has the virtue that it makes calculations easier when we pass to differential equations.
+  \end{figure}
+  \begin{figure}[H]
+    \begin{center}
+      \includeslide[width=\textwidth]{revisedprofile<1>}
+    \end{center}
+    \ttfamily
+    The revised plot looks qualitatively like the earlier one.
+  \end{figure}
+  \begin{figure}[H]
+    \begin{center}
+      \includeslide[width=\textwidth]{revisedprofile<2>}
+    \end{center}
+    \ttfamily
+    You may be thinking that I have not addressed the question of how to find the failure boundary in the first place.
+    It would seem that we need to know the debt valuation function to find the boundary
+    and that we need to know the boundary to solve for the debt valuation function.
+    But we are saved from having to resolve this with some sort of fixed point analysis by that property of continuity.
+
+    At the failure boundary itself, wherever it may be, we know that the solution for both banks surviving is continuous with the solution for just one bank surviving.
+    Bank $k$ in this plot.
+    So we can use the solution for just one bank surviving as a proxy for the solution for both banks surviving
+    when it comes to calculating the exact location of the boundary.
+  \end{figure}
+  \begin{figure}[H]
+    \begin{center}
+      \includeslide[width=\textwidth]{dependencystructure}
+    \end{center}
+    \ttfamily
+    That is, I am describing a computation with the structure represented on the left here.
+    In order to compute the solutions for both banks surviving,
+    I need boundary conditions supplied by the two solutions for just one bank surviving.
+    One might also say that each of those two solutions depends on conditions supplied by the solution for no banks surviving, although that is trivial.
+    Therefore the algorithm must proceed upwards from the bottom of this graph to the top,
+    from the solution associated with the set of no banks to the solution associated with the set of both banks,
+    just as I structured this talk.
+
+    These ideas extend in a straightforward way to a larger number of banks.
+    The number of solutions required rises exponentially and the dimension of each solution also rises with the number of banks.
+    Nevertheless I have found it possible to perform this exercise for a system of seven banks, the number assumed major players in the UK sector.
+    That program solved differential equations rather than running Monte Carlo, because Monte Carlo is not good for calculating boundaries.
+  \end{figure}
+  \begin{figure}[H]
+    \begin{center}
+      \includeslide[width=\textwidth]{supportingtheory}
+    \end{center}
+    \ttfamily
+    There is a theory behind all this, and here is a taste of it.
+    This theorem tells us that if one set of banks is a subset of another
+    then the debt valuation function associated with the first takes lower values everywhere than the debt valuation function associated with the second.
+    Each boldface $\vv$ is vector-valued and the inequality applies to every component.
+    It is not a surprising result, since it is hard to see how an increased number of surviving banks could damage the health of any party.
+
+    The corollary, following trivially, is what is really useful.
+    If every bank in a set $\sA$ is solvent according to the solution associated with some some subset of $\sA$
+    then every bank in $\sA$ is solvent according to the solution associated with $\sA$ itself.
+    Together with the principle of continuity mentioned earlier,
+    this is what allows us to use solutions associated with subsets of $\sA$ to determine
+    the boundary conditions we need to set up the problem for $\sA$ itself.
+  \end{figure}
+  \begin{figure}[H]
+    \begin{center}
+      \includeslide[width=\textwidth]{recoveryrate<1>}
+    \end{center}
+    \ttfamily
+    We have come to my last couple of slides.
+    Nonzero recovery rates have been a recurrent theme in the literature.
+    Eisenberg and Noe had in effect a recovery rate of one at the point of failure.
+    Rogers and Veraart generalised that to values of $\beta$ between zero and one.
+
+    For this plot I have adopted a Rogers and Veraart-type model to value the debt of banks in default,
+    while using the procedure I have described for banks still surviving.
+    The straight lines and sharp corners we see left of and below the failure boundaries
+    are a consequence of the Rogers and Veraart fixed point logic applied to banks in default.
+    The smoother contours above and to the right come from
+    the solution to the diffusion equation for surviving banks that this talk has been about.
+  \end{figure}
+  \begin{figure}[H]
+    \begin{center}
+      \includeslide[width=\textwidth]{recoveryrate<2>}
+    \end{center}
+    \ttfamily
+    In summary.
+
+    I propose a model for the valuation of interbank debt in a network,
+    and hence for the assessment of costs associated with financial contagion.
+    The problem and the assumptions are not new,
+    but as far as I am aware I have arrived at a new methodology.
+    Results suggest that if one is to take my analysis seriously then the
+    Bank of England's model is overoptimistic in a large region of its domain.
+  \end{figure}
+\end{document}
